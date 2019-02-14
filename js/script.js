@@ -61,7 +61,7 @@ $.getJSON('https://geoip-db.com/json/').done (function(location) {
         if (typeof state_code !== "undefined") {
             $('.state-intro').html(state_name.toUpperCase() + ' Drivers — New policies show that for years many drivers have likely overpaid on their car insurance.');
             $('.state-rule').html('"New Rule in ' + state_name + '".');
-            $('img.content-img').attr('src', './img/states/' + state_code + '.jpg');
+            $('img.content-img').attr('src', '/img/states/' + state_code + '.jpg');
         }
     }
 });

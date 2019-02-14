@@ -1,3 +1,5 @@
+<?php
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -104,29 +106,32 @@
                         </p>
                         <div class="row">
                             <div class="col-lg-4">
-                                <form action="/contact-us/" method="post" class="form-form" novalidate="novalidate">
+                                <form action="form/contact.php" id="contact-form" method="post" class="form-form">
+                                    <div class="form-results" style=""></div>
                                     <p>
                                         <label> Your Name (required)
                                            <br>
-                                            <span class="form-control-wrap your-name"><input type="text" name="your-name" value="" size="40" class="form-form-control form-text form-validates-as-required" aria-required="true" aria-invalid="false"></span> </label>
+                                            <span class="form-control-wrap name"><input type="text" name="name" value="" size="40" class="form-control form-text input-field form-validates-as-required" aria-required="true" required></span> </label>
                                     </p>
                                     <p>
                                         <label> Your Email (required)
                                             <br>
-                                            <span class="form-control-wrap your-email"><input type="email" name="your-email" value="" size="40" class="form-form-control form-text form-email form-validates-as-required form-validates-as-email" aria-required="true" aria-invalid="false"></span> </label>
+                                            <span class="form-control-wrap email"><input type="email" name="email" value="" size="40" class="form-control form-text form-email input-field form-validates-as-required form-validates-as-email" aria-required="true" required></span> </label>
                                     </p>
                                     <p>
                                         <label> Subject
                                             <br>
-                                            <span class="form-control-wrap your-subject"><input type="text" name="your-subject" value="" size="40" class="form-form-control form-text" aria-invalid="false"></span> </label>
+                                            <span class="form-control-wrap subject"><input type="text" name="subject" value="" size="40" class="form-control form-text input-field "></span> </label>
                                     </p>
                                     <p>
                                         <label> Your Message
                                             <br>
-                                            <span class="form-control-wrap your-message"><textarea name="your-message" cols="40" rows="10" class="form-form-control form-textarea" aria-invalid="false"></textarea></span> </label>
+                                            <span class="form-control-wrap message"><textarea name="message" cols="40" rows="10" class="form-control form-textarea input-field"></textarea></span> </label>
                                     </p>
+                                    <input type="text" class="d-none" name="form-anti-honeypot" value="">
                                     <p>
-                                        <input type="submit" value="Send" class="form-form-control form-submit"><span class="ajax-loader"></span></p>
+                                        <input type="button" value="Send" name="submit" class="form-control form-submit" onclick="submitContactForm()"><span class="ajax-loader"></span>
+                                    </p>
                                     <div class="form-response-output form-display-none"></div>
                                 </form>
                             </div>
@@ -163,6 +168,32 @@
     <script type="text/javascript" src="/js/bootstrap.min.js"></script>
     <!-- MDB core JavaScript -->
     <script type="text/javascript" src="/js/mdb.js"></script>
+    <script>
+        function submitContactForm() {
+            // Ajax Form Submission
+            var contactForm = $('#contact-form');
+            // ContactForm
+            if (contactForm.length > 0) {
+                var selectRec = contactForm.find('select.required'), qf_results = contactForm.find('.form-results');
+                $.ajax({
+                    type: 'POST',
+                    url: contactForm.attr('action'),
+                    data: contactForm.serialize(),
+                    success: function(data) {
+                        var type = (data.result==='error') ? 'alert-danger' : 'alert-success';
+                        qf_results.removeClass( 'alert-danger alert-success' ).addClass( 'alert ' + type ).html(data.message).slideDown(400);
+                        if (data.result !== 'error') {
+                            $(contactForm).find('.input-field').val('');
+                            $(contactForm).find('.input-field').removeClass('input-focused');
+                        }
+                    },
+                    error: function(xhr) { // if error occured
+                    },
+                });
+                selectRec.on('change', function() { $(this).valid(); });
+            }
+        }
+    </script>
 </body>
 
 </html>
